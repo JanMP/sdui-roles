@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('ecmascript');
   api.use('coffeescript');
   api.use('typescript');
+  api.use('alanning:roles@3.3.0')
   api.mainModule('sdui-roles.js');
 });
 
