@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'sdui-roles',
+  name: 'janmp:sdui-roles',
   version: '0.0.1',
   // Brief, one-line summary of the package.
   summary: '',
