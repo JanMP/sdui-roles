@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('ecmascript');
   api.use('coffeescript');
   api.use('typescript');
+  api.use('janmp:sdui-uniforms');
   api.use('alanning:roles@3.3.0')
   api.mainModule('sdui-roles.js');
 });
@@ -24,6 +25,7 @@ Package.onTest(function(api) {
   api.use('tinytest');
   api.use('coffeescript');
   api.use('typescript');
+  api.use('janmp:sdui-uniforms');
   api.use('sdui-roles');
   api.mainModule('sdui-roles-tests.js');
 });
