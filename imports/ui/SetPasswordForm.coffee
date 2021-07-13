@@ -16,12 +16,12 @@ passwordSchemaBridge = new SimpleSchemaBridge passwordSchema
 export default SetPasswordForm = ({token}) ->
   
   setPassword = ({password}) ->
-    Auccounts.resetPassword token, password, (error) ->
+    Accounts.resetPassword token, password, (error) ->
       if error
         alert 'Fehler beim Zurücksetzen des Passworts: ' + error?.message
 
   <AutoForm
-    schema={passwordSchema}
+    schema={passwordSchemaBridge}
     submitField={-> <SubmitField value="Passwort setzen" />}
     onSubmit={setPassword}
   />
