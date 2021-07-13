@@ -1,6 +1,7 @@
 import {Meteor} from 'meteor/meteor'
 import {Accounts} from 'meteor/accounts-base'
 import React, {useState} from 'react'
+import {useTracker} from 'meteor/react-meteor-data'
 import SimpleSchema from 'simpl-schema'
 import SimpleSchemaBridge from 'uniforms-bridge-simple-schema-2'
 import {AutoForm, SubmitField} from 'meteor/janmp:sdui-uniforms'
@@ -12,10 +13,10 @@ loginSchema = new SimpleSchema
   email:
     type: String,
     label: 'E-Mail'
-  password: 
+  password:
     type: String,
     label: 'Passwort'
-    uniforms: 
+    uniforms:
       type: 'password'
 
 signupSchema = new SimpleSchema
@@ -55,9 +56,11 @@ signupSchemaBridge = new SimpleSchemaBridge signupSchema
 emailSchemaBridge = new SimpleSchemaBridge emailSchema
 
 
-loginForm = ->
+LoginForm = ->
   login = ({email, password}) ->
+    console.log 'login', {email, password}
     Meteor.loginWithPassword email, password, (error) ->
+      console.log 'login callback'
       if error
         alert 'Login fehlgeschlagen: ' + error
  
@@ -68,8 +71,9 @@ loginForm = ->
   />
 
 
-signupForm = ->
+SignupForm = ->
   signup = (model) ->
+    console.log 'wtf'
     Accounts.createUser model, (error) ->
       if error
         alert 'User Account konnte nicht angelegt werden: ' + error?.message
@@ -80,8 +84,11 @@ signupForm = ->
     onSubmit={signup}
   />
 
-emailForm = ->
-  resetPassword = (model) -> console.log model
+EmailForm = ->
+  resetPassword = ({email}) ->
+    Accounts.forgotPassword {email}, (error) ->
+      if error
+        alert 'Fehler beim Zurücksetzen des Passowrds' + error?.message
 
   <AutoForm
     schema={emailSchemaBridge}
@@ -89,13 +96,14 @@ emailForm = ->
     onSubmit={resetPassword}
   />
 
-export default LoginForm = ->
+export default ({allowResetPassword = false}) ->
   [formToShow, setFormToShow] = useState 'login'
+  user = useTracker -> Meteor.user()
 
   [Form, loginOrSignupLabel] = switch formToShow
-    when 'login' then [loginForm, 'Ich habe noch keinen Account']
-    when 'signup' then [signupForm, 'Ich habe bereits einen Account']
-    when 'resetPassword' then [emailForm, 'Ich habe noch keinen Account']
+    when 'login' then [LoginForm, 'Ich habe noch keinen Account']
+    when 'signup' then [SignupForm, 'Ich habe bereits einen Account']
+    when 'resetPassword' then [EmailForm, 'Ich habe noch keinen Account']
     else [null, 'fnord']
 
   toggleLoginOrSignup = ->
@@ -106,7 +114,7 @@ export default LoginForm = ->
     <Form />
     { <div>
       <a onClick={-> setFormToShow 'resetPassword'}>Ich habe mein Passwort vergessen</a>
-    </div> if formToShow isnt 'resetPassword'}
+    </div> if allowResetPassword and formToShow isnt 'resetPassword'}
     {<div>
       <a onClick={toggleLoginOrSignup}>{loginOrSignupLabel}</a>
     </div> if loginOrSignupLabel?}
