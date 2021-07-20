@@ -10,6 +10,8 @@ passwordSchema = new SimpleSchema
     label: 'Passwort'
     # TODO: change regEx to accomodate sick desire for untripleclickselectable password
     regEx: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+    uniforms:
+      type: 'password'
 
 passwordSchemaBridge = new SimpleSchemaBridge passwordSchema
 
